@@ -1,24 +1,22 @@
+//@ts-nocheck
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { PostCard, Categories, PostWidget } from "../components";
+import { getPosts } from '../services';
 
-const posts = [
-  { title: "React Testing", excerpt: "Learn React Testing" },
-  { title: "React with Tailwind", excerpt: "Learn Tailwind" },
-];
-const Home: NextPage = () => {
+const Home: NextPage = ({posts}) => {
   return (
     <div className="container mx-auto px-10 mb-8">
       <Head>
         <title>CMS Blog</title>
         <link rel="icon" href="/favicon.ico" />
+
       </Head>
       {/* 标准的 12 列 布局 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-8 col-span-1">
           {posts.map((post, index) => (
-            <PostCard post={post} key={post.title} />
+            <PostCard post={post.node} key={post.node.title} />
           ))}
         </div>
         <div className="lg:col-span-4 col-span-1">
@@ -33,3 +31,11 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export async function getStaticProps() {
+    const posts = (await getPosts()) || [];
+
+    return {
+        props: {posts}
+    }
+}
