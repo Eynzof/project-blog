@@ -4901,7 +4901,6 @@ input PostUpdateManyInput {
     content: RichTextAST
     excerpt: String
     featuredPost: Boolean
-    slug: String
     title: String
 }
 
@@ -5121,6 +5120,7 @@ input PostWhereStageInput {
 "References Post record uniquely"
 input PostWhereUniqueInput {
     id: ID
+    slug: String
 }
 
 input PublishLocaleInput {
