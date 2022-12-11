@@ -1,13 +1,13 @@
 //@ts-nocheck
-import React from 'react';
+import React from "react";
 
-const PostCard = ({post}) => {
-    return (
-        <div>
-            {post.title}
-            {post.excerpt}
-        </div>
-    );
+const PostCard = ({ post }) => {
+  return (
+    <div>
+      {post.title}
+      {post.excerpt}
+    </div>
+  );
 };
 
 export default PostCard;
