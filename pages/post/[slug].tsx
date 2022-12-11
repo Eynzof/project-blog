@@ -14,7 +14,7 @@ const PostPage = () => {
                     <CommentsForm/>
                     <Comments/>
                 </div>
-                <div className="col-span-1 lg:col-span-8">
+                <div className="col-span-1 lg:col-span-4">
                     <div className="relative lg:sticky top-8">
                         <PostWidget/>
                         <Categories/>
