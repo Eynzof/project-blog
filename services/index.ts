@@ -2,7 +2,10 @@
 import { request, gql } from "graphql-request";
 
 const graphqlAPI = process.env.NEXT_PUBLIC_GRAPHCMS_ENDPOINT;
-
+/**
+ * 发送一个 GraphQL 请求，获取所有文章的全部信息。
+ * @returns {Promise<Array>} 返回一个 Promise，它包含包含文章信息的数组。
+ */
 export const getPosts = async () => {
   const query = gql`
     query MyQuery {
@@ -38,7 +41,10 @@ export const getPosts = async () => {
 
   return result.postsConnection.edges;
 };
-
+/**
+ * 发送一个 GraphQL 请求，获取所有分类的信息。
+ * @returns {Promise<Array>} 返回一个 Promise，它包含分类信息的数组。
+ */
 export const getCategories = async () => {
   const query = gql`
     query GetCategories {
@@ -53,6 +59,32 @@ export const getCategories = async () => {
 
   return result.categories;
 };
+
+/**
+ * 发送一个 GraphQL 请求，获取所有分类的信息。
+ * @returns {Promise<Array>} 返回一个 Promise，它包含分类信息的数组。
+ */
+export const getComments = async (slug) => {
+  console.log(slug);
+  const query = gql`
+    query GetComments($slug: String!) {
+      comments(where: { post: { slug: $slug } }) {
+        name
+        createdAt
+        comment
+      }
+    }
+  `;
+
+  const result = await request(graphqlAPI, query, { slug });
+  console.log(result);
+  return result.comments;
+};
+/**
+ * 获取指定文章的详细信息
+ * @param slug 文章的 slug
+ * @returns 文章的详细信息
+ */
 
 export const getPostDetails = async (slug) => {
   const query = gql`
