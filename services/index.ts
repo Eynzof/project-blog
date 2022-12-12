@@ -129,3 +129,14 @@ export const getRecentPosts = async () => {
 
   return result.posts;
 };
+/**
+ * 向本地后端发送请求，endpoint = /api
+ * @param commentObj 要提交的评论对象
+ */
+export const submitComment = async (commentObj) => {
+  const result = await fetch("/api/comments", {
+    method: "POST",
+    body: JSON.stringify(obj),
+  });
+  return result.json();
+};
