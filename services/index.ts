@@ -136,7 +136,7 @@ export const getRecentPosts = async () => {
 export const submitComment = async (commentObj) => {
   const result = await fetch("/api/comments", {
     method: "POST",
-    body: JSON.stringify(obj),
+    body: JSON.stringify(commentObj),
   });
   return result.json();
 };

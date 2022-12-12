@@ -7,16 +7,16 @@ type Data = {
 };
 // !是 not null assertion，表示这个变量一定不是null，否则报错
 const graphQLAPI: string = process.env.NEXT_PUBLIC_GRAPHCMS_ENDPOINT!;
+const graphQLToken: string = process.env.NEXT_PUBLIC_GRAPHCMS_TOKEN!;
 
 export default async function comments(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { name, email, slug, comment } = req.body;
-
+  const vars = JSON.parse(req.body);
   const graphQLClient = new GraphQLClient(graphQLAPI, {
     headers: {
-      authorization: `Bearer ${process.env.NEXT_PUBLIC_GRAPHCMS_TOKEN}`,
+      authorization: `Bearer ${graphQLToken}`,
     },
   });
 
@@ -40,12 +40,10 @@ export default async function comments(
     }
   `;
 
-  const result = await graphQLClient.request(query, {
-    name,
-    email,
-    slug,
-    comment,
-  });
-
-  return res.status(200).send(result);
+  try {
+    const result = await graphQLClient.request(query, vars);
+    return res.status(200).send(result);
+  } catch (e) {
+    return res.status(500).send(e as Error);
+  }
 }
