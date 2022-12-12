@@ -695,6 +695,28 @@ type Comment implements Node {
     "The unique identifier"
     id: ID!
     name: String!
+    post(
+        """
+
+        Sets the locale of the resolved parent document as the only locale in the query's subtree.
+
+        Note that `post` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+        For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+
+        This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+        """
+        forceParentLocale: Boolean,
+        """
+
+        Allows to optionally override locale filtering behaviour in the query's subtree.
+
+        Note that `post` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+        For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+
+        This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+        """
+        locales: [Locale!]
+    ): Post
     "The time the document was published. Null on documents in draft stage."
     publishedAt: DateTime
     "User that last published this document"
@@ -1547,6 +1569,35 @@ type Post implements Node {
         skip: Int,
         where: CategoryWhereInput
     ): [Category!]!
+    comments(
+        after: String,
+        before: String,
+        first: Int,
+        """
+
+        Sets the locale of the resolved parent document as the only locale in the query's subtree.
+
+        Note that `comments` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+        For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+
+        This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+        """
+        forceParentLocale: Boolean,
+        last: Int,
+        """
+
+        Allows to optionally override locale filtering behaviour in the query's subtree.
+
+        Note that `comments` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+        For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+
+        This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+        """
+        locales: [Locale!],
+        orderBy: CommentOrderByInput,
+        skip: Int,
+        where: CommentWhereInput
+    ): [Comment!]!
     content: PostContentRichText!
     "The time the document was created"
     createdAt: DateTime!
@@ -4218,6 +4269,7 @@ input CommentCreateInput {
     createdAt: DateTime
     email: String!
     name: String!
+    post: PostCreateOneInlineInput
     updatedAt: DateTime
 }
 
@@ -4340,6 +4392,7 @@ input CommentManyWhereInput {
     name_not_starts_with: String
     "All values starting with the given string."
     name_starts_with: String
+    post: PostWhereInput
     publishedAt: DateTime
     "All values greater than the given value."
     publishedAt_gt: DateTime
@@ -4381,6 +4434,7 @@ input CommentUpdateInput {
     comment: String
     email: String
     name: String
+    post: PostUpdateOneInlineInput
 }
 
 input CommentUpdateManyInlineInput {
@@ -4560,6 +4614,7 @@ input CommentWhereInput {
     name_not_starts_with: String
     "All values starting with the given string."
     name_starts_with: String
+    post: PostWhereInput
     publishedAt: DateTime
     "All values greater than the given value."
     publishedAt_gt: DateTime
@@ -4695,6 +4750,7 @@ input PostConnectInput {
 input PostCreateInput {
     author: AuthorCreateOneInlineInput
     categories: CategoryCreateManyInlineInput
+    comments: CommentCreateManyInlineInput
     content: RichTextAST!
     createdAt: DateTime
     excerpt: String!
@@ -4733,6 +4789,9 @@ input PostManyWhereInput {
     categories_every: CategoryWhereInput
     categories_none: CategoryWhereInput
     categories_some: CategoryWhereInput
+    comments_every: CommentWhereInput
+    comments_none: CommentWhereInput
+    comments_some: CommentWhereInput
     createdAt: DateTime
     "All values greater than the given value."
     createdAt_gt: DateTime
@@ -4872,6 +4931,7 @@ input PostManyWhereInput {
 input PostUpdateInput {
     author: AuthorUpdateOneInlineInput
     categories: CategoryUpdateManyInlineInput
+    comments: CommentUpdateManyInlineInput
     content: RichTextAST
     excerpt: String
     featuredImage: AssetUpdateOneInlineInput
@@ -4967,6 +5027,9 @@ input PostWhereInput {
     categories_every: CategoryWhereInput
     categories_none: CategoryWhereInput
     categories_some: CategoryWhereInput
+    comments_every: CommentWhereInput
+    comments_none: CommentWhereInput
+    comments_some: CommentWhereInput
     createdAt: DateTime
     "All values greater than the given value."
     createdAt_gt: DateTime
